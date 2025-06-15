@@ -11,11 +11,11 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import AdminResponsesPage from "./pages/AdminResponsesPage";
 
+
 function App() {
   return (
     <AuthProvider>
-      {/* ATTENZIONE: abbiamo aggiunto basename per GitHub Pages */}
-      <Router basename="/Piccantometro">
+      <Router>
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
