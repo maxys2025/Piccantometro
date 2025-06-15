@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/maxys2025/Piccantometro/static/css/main.e122c25b.css",
+    "main.js": "/maxys2025/Piccantometro/static/js/main.e64e867e.js",
+    "static/js/453.a8e41a8d.chunk.js": "/maxys2025/Piccantometro/static/js/453.a8e41a8d.chunk.js",
+    "index.html": "/maxys2025/Piccantometro/index.html",
+    "main.e122c25b.css.map": "/maxys2025/Piccantometro/static/css/main.e122c25b.css.map",
+    "main.e64e867e.js.map": "/maxys2025/Piccantometro/static/js/main.e64e867e.js.map",
+    "453.a8e41a8d.chunk.js.map": "/maxys2025/Piccantometro/static/js/453.a8e41a8d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e122c25b.css",
+    "static/js/main.e64e867e.js"
+  ]
+}
