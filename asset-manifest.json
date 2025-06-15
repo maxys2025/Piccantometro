@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/maxys2025/Piccantometro/static/css/main.e122c25b.css",
-    "main.js": "/maxys2025/Piccantometro/static/js/main.07ec1c9e.js",
-    "static/js/453.a8e41a8d.chunk.js": "/maxys2025/Piccantometro/static/js/453.a8e41a8d.chunk.js",
-    "index.html": "/maxys2025/Piccantometro/index.html",
-    "main.e122c25b.css.map": "/maxys2025/Piccantometro/static/css/main.e122c25b.css.map",
-    "main.07ec1c9e.js.map": "/maxys2025/Piccantometro/static/js/main.07ec1c9e.js.map",
-    "453.a8e41a8d.chunk.js.map": "/maxys2025/Piccantometro/static/js/453.a8e41a8d.chunk.js.map"
+    "main.css": "/Piccantometro/static/css/main.e122c25b.css",
+    "main.js": "/Piccantometro/static/js/main.b8e111da.js",
+    "static/js/453.a8e41a8d.chunk.js": "/Piccantometro/static/js/453.a8e41a8d.chunk.js",
+    "index.html": "/Piccantometro/index.html",
+    "main.e122c25b.css.map": "/Piccantometro/static/css/main.e122c25b.css.map",
+    "main.b8e111da.js.map": "/Piccantometro/static/js/main.b8e111da.js.map",
+    "453.a8e41a8d.chunk.js.map": "/Piccantometro/static/js/453.a8e41a8d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e122c25b.css",
-    "static/js/main.07ec1c9e.js"
+    "static/js/main.b8e111da.js"
   ]
 }
