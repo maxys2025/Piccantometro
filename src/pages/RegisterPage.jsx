@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -32,20 +32,17 @@ export default function RegisterPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      console.log("✅ Utente creato:", user.email);
 
       await setDoc(doc(db, "utenti", user.uid), {
         email: user.email,
         birthdate: birthdate,
         createdAt: new Date()
       });
+      console.log("✅ Utente salvato su Firestore");
 
-      // ✅ Aspetta che Firebase confermi che l'utente è loggato
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          navigate("/quiz");
-        }
-      });
-
+      // ✅ Redirect diretto al quiz
+      navigate("/quiz");
     } catch (err) {
       let friendlyMessage = "Errore nella registrazione.";
 
@@ -57,12 +54,14 @@ export default function RegisterPage() {
         friendlyMessage = "Errore: La password è troppo debole (minimo 6 caratteri).";
       }
 
+      console.error("❌ Errore registrazione:", err);
       setError(friendlyMessage);
     }
   };
 
   return (
     <div style={styles.container}>
+      <Navbar />
       <h1 style={styles.title}>Registrati a Piccantometro</h1>
       <form onSubmit={handleRegister} style={styles.form}>
         <input
