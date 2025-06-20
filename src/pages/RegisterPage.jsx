@@ -32,6 +32,7 @@ export default function RegisterPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
       console.log("✅ Utente creato:", user.email);
 
       await setDoc(doc(db, "utenti", user.uid), {
