@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!isOver18(birthdate)) {
       setError("Devi avere almeno 18 anni per registrarti.");
@@ -38,7 +39,13 @@ export default function RegisterPage() {
         createdAt: new Date()
       });
 
-      navigate("/quiz");
+      // ✅ Aspetta che Firebase confermi che l'utente è loggato
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          navigate("/quiz");
+        }
+      });
+
     } catch (err) {
       let friendlyMessage = "Errore nella registrazione.";
 
