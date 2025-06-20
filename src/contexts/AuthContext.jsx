@@ -1,36 +1,137 @@
-import React, { useContext, useState, useEffect, createContext } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebaseConfig"; // assicurati che questo sia corretto
+import React, { useState } from "react";
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
-const AuthContext = createContext();
+export default function RegisterPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+  const isOver18 = (date) => {
+    const today = new Date();
+    const birth = new Date(date);
+    const age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    return age > 18 || (age === 18 && m >= 0);
+  };
 
-export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
+    if (!isOver18(birthdate)) {
+      setError("Devi avere almeno 18 anni per registrarti.");
+      return;
+    }
 
-    return unsubscribe;
-  }, []);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-  const logout = () => signOut(auth);
+      await setDoc(doc(db, "utenti", user.uid), {
+        email: user.email,
+        birthdate: birthdate,
+        createdAt: new Date()
+      });
 
-  const value = {
-    currentUser,
-    logout,
+      // ✅ Aspetta che Firebase confermi che l'utente è loggato
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          navigate("/quiz");
+        }
+      });
+
+    } catch (err) {
+      let friendlyMessage = "Errore nella registrazione.";
+
+      if (err.code === "auth/email-already-in-use") {
+        friendlyMessage = "Errore: Email già in uso.";
+      } else if (err.code === "auth/invalid-email") {
+        friendlyMessage = "Errore: Email non valida.";
+      } else if (err.code === "auth/weak-password") {
+        friendlyMessage = "Errore: La password è troppo debole (minimo 6 caratteri).";
+      }
+
+      setError(friendlyMessage);
+    }
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Registrati a Piccantometro</h1>
+      <form onSubmit={handleRegister} style={styles.form}>
+        <input
+          type="email"
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          style={styles.input}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          type="date"
+          style={styles.input}
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+          required
+        />
+        <button type="submit" style={styles.button}>Registrati</button>
+        {error && <p style={styles.error}>{error}</p>}
+      </form>
+    </div>
   );
 }
+
+const styles = {
+  container: {
+    backgroundColor: "#111",
+    color: "#fff",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "2rem"
+  },
+  title: {
+    color: "#FFA500",
+    marginBottom: "1rem"
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    width: "300px"
+  },
+  input: {
+    padding: "10px",
+    marginBottom: "10px",
+    borderRadius: "8px",
+    border: "none",
+    fontSize: "16px"
+  },
+  button: {
+    backgroundColor: "#FFA500",
+    color: "#000",
+    padding: "10px",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "bold"
+  },
+  error: {
+    color: "red",
+    marginTop: "10px"
+  }
+};
